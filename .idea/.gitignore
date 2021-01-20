@@ -1,0 +1,4 @@
+# Default ignored files
+/workspace.xml
+/kettle-web-core/lib/*git
+/**/*.jar

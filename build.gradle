@@ -1,0 +1,87 @@
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+sourceCompatibility = 1.8
+
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+//在编译构建时的配置
+buildscript {
+    ext {
+        //定义一个变量，统一规定springboot的版本
+        springBootVersion = '2.0.6.RELEASE'
+    }
+    repositories {
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        //maven { url 'https://repo.grails.org/grails/core'}
+        jcenter()
+        mavenCentral()
+        //spring repo
+
+    }
+
+    dependencies {//用来打包
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+//统一所有项目的配置
+allprojects {
+    group 'com.xugw'
+    version '1.0-SNAPSHOT'
+
+    ext {
+        springCloudVersion = 'Finchley.SR4'
+    }
+
+    repositories {
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        jcenter()
+        mavenCentral()
+        //spring repo
+        maven { url "http://repo.spring.io/snapshot" }
+        maven { url "http://repo.spring.io/milestone" }
+        maven { url "http://repo.spring.io/release" }
+        maven { url "http://repo.spring.io/plugins-snapshot" }
+    }
+    //指定编码格式
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
+}
+
+//统一子项目的配置，仅对子项目生效
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'org.springframework.boot'
+
+    dependencies {
+        compile('org.springframework.boot:spring-boot-starter-web:2.0.6.RELEASE') {
+            //移出tomcat
+            exclude module: "spring-boot-starter-tomcat"
+        }
+        // undertow(性能比tomcat好，吞吐量大)
+        compile 'org.springframework.boot:spring-boot-starter-undertow:2.0.6.RELEASE'
+        // 健康检查
+        compile 'org.springframework.boot:spring-boot-starter-actuator:2.0.6.RELEASE'
+        // 显示调用防止出错
+        compile group: 'com.google.code.gson', name: 'gson', version: '2.6.1'
+        // 测试包
+        compile 'org.springframework.boot:spring-boot-starter-test:2.0.6.RELEASE'
+
+        // 集成Redis
+        // compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis'
+        testCompile(
+                group: 'junit', name: 'junit', version: '4.12'
+        )
+    }
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+    }
+
+}

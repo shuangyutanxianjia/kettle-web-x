@@ -1,0 +1,15 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: reigster-center
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    register-with-eureka: false #启动时不注册，来表示自己是一个注册中心
+    fetch-registry: false #不在注册中心拉取数据
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+  server:
+    enable-self-preservation: true  #是否开启eureka服务器的自我保护

@@ -1,0 +1,5 @@
+rootProject.name = 'kettle-web-x'
+include 'kettle-registercenter'
+include 'kettle-web-core'
+include 'kettle-web-quartz'
+

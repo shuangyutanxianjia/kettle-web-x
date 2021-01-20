@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xugw.kettlecore.mapper.JobMapper">
+    <insert id="addJob" parameterType="com.xugw.kettlecore.entity.JobEntity">
+        insert into job (create_at,update_at,name,description,path,groupid,exectype,jobstatus)
+        values (#{create_at},#{update_at},#{name},#{description},#{path},#{groupid},#{exectype},#{jobstatus});
+    </insert>
+
+    <select id = "queryJob" resultType="com.xugw.kettlecore.entity.JobEntity">
+        select id,
+               create_at,
+               update_at,
+               name,
+               description,
+               path,
+               groupid,
+               exectype,
+               jobstatus
+               from job
+               where 1 = 1
+               <if test=" jobid != null and jobid != ''">
+                    and id = #{jobid,jdbcType=NUMERIC}
+               </if>
+    </select>
+</mapper>

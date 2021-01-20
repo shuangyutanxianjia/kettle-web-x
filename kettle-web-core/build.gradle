@@ -1,0 +1,88 @@
+plugins {
+    id 'java'
+}
+
+group 'com.xugw'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+    jcenter()
+    mavenCentral()
+    //spring repo
+    maven { url "http://repo.spring.io/snapshot" }
+    maven { url "http://repo.spring.io/milestone" }
+    maven { url "http://repo.spring.io/release" }
+    maven { url "http://repo.spring.io/plugins-snapshot" }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+dependencies {
+    // eureak:注册中心,服务器
+    compile 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server:3.0.0'
+    // openfeign:远程服务调用
+    compile 'org.springframework.cloud:spring-cloud-starter-openfeign:3.0.0'
+    // 本地依赖包
+    compile fileTree(dir:'lib',include:['*.jar'])
+    // mysql
+    compile 'mysql:mysql-connector-java:5.1.24'
+    // druid数据库连接池
+    compile 'com.alibaba:druid-spring-boot-starter:1.1.9'
+    // 数据库连接
+    compile 'org.springframework.boot:spring-boot-starter-jdbc:2.0.6.RELEASE'
+    // mybaits
+    compile 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.4'
+    // 分页插件
+    // compile 'com.github.pagehelper:pagehelper-spring-boot-starter:1.2.5'
+
+}
+
+jar {
+
+    String someString = ''
+
+    configurations.runtime.each {someString = someString + " lib\\"+it.name}
+
+    manifest {
+
+        attributes 'Main-Class': 'com.xugw.register.center.KettleCore'
+
+        attributes 'Class-Path': someString
+
+    }
+
+}
+
+//清除上次的编译过的文件
+
+task clearPj(type:Delete){
+
+    delete 'build','target'
+
+}
+
+
+task copyJar(type:Copy){
+
+    from configurations.runtime
+
+    into ('build/libs/lib')
+
+
+}
+
+
+//把JAR复制到目标目录
+
+task release(type: Copy,dependsOn: [build,copyJar]) {
+
+// from 'conf'
+
+// into ('build/libs/eachend/conf') // 目标位置
+
+}
