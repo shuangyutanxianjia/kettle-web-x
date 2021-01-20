@@ -1,0 +1,68 @@
+plugins {
+    id 'java'
+}
+
+group 'com.xugw'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+dependencies {
+    //eureak:注册中心,服务器
+    compile 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server:3.0.0'
+    // openfeign:远程服务调用
+    compile 'org.springframework.cloud:spring-cloud-starter-openfeign:3.0.0'
+}
+
+jar {
+
+    String someString = ''
+
+    configurations.runtime.each {someString = someString + " lib\\"+it.name}
+
+    manifest {
+
+        attributes 'Main-Class': 'com.xugw.register.center.RegisterCenterProvider'
+
+        attributes 'Class-Path': someString
+
+    }
+
+}
+
+//清除上次的编译过的文件
+
+task clearPj(type:Delete){
+
+    delete 'build','target'
+
+}
+
+
+task copyJar(type:Copy){
+
+    from configurations.runtime
+
+    into ('build/libs/lib')
+
+
+}
+
+
+//把JAR复制到目标目录
+
+task release(type: Copy,dependsOn: [build,copyJar]) {
+
+// from 'conf'
+
+// into ('build/libs/eachend/conf') // 目标位置
+
+}
